@@ -456,7 +456,7 @@ function Start-ProfileExport {
     # Formiruem komandu scanstate
     $scanstate = Join-Path $USMTPath "scanstate.exe"
     $migapp = Join-Path $USMTPath "migapp.xml"
-    $migdocs = Join-Path $USMTPath "migdocs.xml"
+    # migdocs.xml ubrali - on skaniruet vse diski, nam nuzhna tolko papka profilya
     $miguser = Join-Path $USMTPath "miguser.xml"
     
     # Opredelyaem domen i polzovatelya dlya /ui parametra
@@ -468,7 +468,6 @@ function Start-ProfileExport {
     $arguments = @(
         "`"$usmtExportPath`""
         "/i:`"$migapp`""
-        "/i:`"$migdocs`""
         "/i:`"$miguser`""
         "/i:`"$MigExcludeXml`""
         "/ue:*\*"
@@ -494,7 +493,7 @@ function Start-ProfileExport {
         $batchContent = @"
 @echo off
 cd /d "$USMTPath"
-scanstate.exe "$usmtExportPath" /i:"$migapp" /i:"$migdocs" /i:"$miguser" /i:"$MigExcludeXml" /ue:*\* /ui:$userInclude /l:"$scanstateLog" /progress:"$progressLog" /c /o /vsc
+scanstate.exe "$usmtExportPath" /i:"$migapp" /i:"$miguser" /i:"$MigExcludeXml" /ue:*\* /ui:$userInclude /l:"$scanstateLog" /progress:"$progressLog" /c /o /vsc
 exit /b %ERRORLEVEL%
 "@
         
@@ -679,13 +678,12 @@ function Start-ProfileImport {
     # Formiruem komandu loadstate
     $loadstate = Join-Path $USMTPath "loadstate.exe"
     $migapp = Join-Path $USMTPath "migapp.xml"
-    $migdocs = Join-Path $USMTPath "migdocs.xml"
+    # migdocs.xml ubrali - sootvetstvuet eksportu
     $miguser = Join-Path $USMTPath "miguser.xml"
     
     $arguments = @(
         "`"$usmtImportPath`""
         "/i:`"$migapp`""
-        "/i:`"$migdocs`""
         "/i:`"$miguser`""
         "/l:`"$loadstateLog`""
         "/progress:`"$progressLog`""
@@ -706,7 +704,7 @@ function Start-ProfileImport {
         $batchContent = @"
 @echo off
 cd /d "$USMTPath"
-loadstate.exe "$usmtImportPath" /i:"$migapp" /i:"$migdocs" /i:"$miguser" /l:"$loadstateLog" /progress:"$progressLog" /c
+loadstate.exe "$usmtImportPath" /i:"$migapp" /i:"$miguser" /l:"$loadstateLog" /progress:"$progressLog" /c
 exit /b %ERRORLEVEL%
 "@
         
