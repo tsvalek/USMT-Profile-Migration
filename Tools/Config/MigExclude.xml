@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    USMT Migration Exclusion Configuration
+    Исключает кэш, временные файлы и прочий "мусор" из миграции профиля
+    
+    ВАЖНО: Этот файл исключает:
+    - Все диски кроме C:
+    - Большие файлы (ISO, VHD, архивы и т.д.)
+    - Кэш браузеров и приложений
+    - Временные файлы
+-->
+<migration urlid="http://www.microsoft.com/migration/1.0/migxmlext/customexclusions">
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Исключение НЕ-системных дисков (D:, E:, F: и т.д.) -->
+    <!-- ============================================================ -->
+    <component type="Documents" context="System">
+        <displayName>Exclude Non-System Drives</displayName>
+        <role role="Data">
+            <rules>
+                <unconditionalExclude>
+                    <objectSet>
+                        <!-- Исключаем все фиксированные диски кроме C: -->
+                        <pattern type="File">D:\* [*]</pattern>
+                        <pattern type="File">E:\* [*]</pattern>
+                        <pattern type="File">F:\* [*]</pattern>
+                        <pattern type="File">G:\* [*]</pattern>
+                        <pattern type="File">H:\* [*]</pattern>
+                        <pattern type="File">I:\* [*]</pattern>
+                        <pattern type="File">J:\* [*]</pattern>
+                        <pattern type="File">K:\* [*]</pattern>
+                        <pattern type="File">L:\* [*]</pattern>
+                        <pattern type="File">M:\* [*]</pattern>
+                        <pattern type="File">N:\* [*]</pattern>
+                        <pattern type="File">O:\* [*]</pattern>
+                        <pattern type="File">P:\* [*]</pattern>
+                        <pattern type="File">Q:\* [*]</pattern>
+                        <pattern type="File">R:\* [*]</pattern>
+                        <pattern type="File">S:\* [*]</pattern>
+                        <pattern type="File">T:\* [*]</pattern>
+                        <pattern type="File">U:\* [*]</pattern>
+                        <pattern type="File">V:\* [*]</pattern>
+                        <pattern type="File">W:\* [*]</pattern>
+                        <pattern type="File">X:\* [*]</pattern>
+                        <pattern type="File">Y:\* [*]</pattern>
+                        <pattern type="File">Z:\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Исключение больших и ненужных файлов              -->
+    <!-- ============================================================ -->
+    <component type="Documents" context="System">
+        <displayName>Exclude Large and Unnecessary Files</displayName>
+        <role role="Data">
+            <rules>
+                <unconditionalExclude>
+                    <objectSet>
+                        <!-- ISO образы -->
+                        <pattern type="File">* [*.iso]</pattern>
+                        
+                        <!-- Виртуальные диски -->
+                        <pattern type="File">* [*.vhd]</pattern>
+                        <pattern type="File">* [*.vhdx]</pattern>
+                        <pattern type="File">* [*.vmdk]</pattern>
+                        <pattern type="File">* [*.vdi]</pattern>
+                        
+                        <!-- Архивы установщиков -->
+                        <pattern type="File">* [*.msi]</pattern>
+                        <pattern type="File">* [*.msix]</pattern>
+                        <pattern type="File">* [*.appx]</pattern>
+                        <pattern type="File">* [*.appxbundle]</pattern>
+                        
+                        <!-- Большие архивы (можно убрать если нужны) -->
+                        <pattern type="File">* [*.wim]</pattern>
+                        <pattern type="File">* [*.esd]</pattern>
+                        
+                        <!-- Бэкапы и образы -->
+                        <pattern type="File">* [*.bak]</pattern>
+                        <pattern type="File">* [*.old]</pattern>
+                        
+                        <!-- Видеофайлы большого размера -->
+                        <pattern type="File">* [*.mkv]</pattern>
+                        <pattern type="File">* [*.avi]</pattern>
+                        <pattern type="File">* [*.mov]</pattern>
+                        <pattern type="File">* [*.wmv]</pattern>
+                        
+                        <!-- Torrent data -->
+                        <pattern type="File">* [*.torrent]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Исключение OneDrive Temp (C:\OneDriveTemp)        -->
+    <!-- ============================================================ -->
+    <component type="Documents" context="System">
+        <displayName>Exclude OneDrive Temp</displayName>
+        <role role="Data">
+            <rules>
+                <unconditionalExclude>
+                    <objectSet>
+                        <pattern type="File">C:\OneDriveTemp\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Исключение временных файлов и кэша                -->
+    <!-- ============================================================ -->
+    <component type="Documents" context="User">
+        <displayName>Exclude User Temp and Cache</displayName>
+        <role role="Data">
+            <rules>
+                <!-- ================================================ -->
+                <!-- Временные файлы Windows                          -->
+                <!-- ================================================ -->
+                <unconditionalExclude>
+                    <objectSet>
+                        <!-- Local Temp -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Temp\* [*]</pattern>
+                        
+                        <!-- Windows Temporary Internet Files -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\INetCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\INetCookies\* [*]</pattern>
+                        
+                        <!-- Windows Explorer Thumbnails -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\Explorer\* [thumbcache_*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\Explorer\* [iconcache_*]</pattern>
+                        
+                        <!-- Windows Delivery Optimization -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\DeliveryOptimization\* [*]</pattern>
+                        
+                        <!-- Windows Error Reports -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\WER\* [*]</pattern>
+                        
+                        <!-- Crash Dumps -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\CrashDumps\* [*]</pattern>
+                        
+                        <!-- Recent Items (shortcuts, will be recreated) -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\Recent\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+
+                <!-- ================================================ -->
+                <!-- Кэш браузеров                                    -->
+                <!-- ================================================ -->
+                <unconditionalExclude>
+                    <objectSet>
+                        <!-- Google Chrome Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\Code Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\GPUCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\Service Worker\CacheStorage\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\Service Worker\ScriptCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\ShaderCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\IndexedDB\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\CacheStorage\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\GrShaderCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\*\GraphiteDawnCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [Favicons]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [Favicons-journal]</pattern>
+                        
+                        <!-- Microsoft Edge Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\*\Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\*\Code Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\*\GPUCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\*\Service Worker\CacheStorage\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\*\Service Worker\ScriptCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\*\ShaderCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\*\IndexedDB\* [*]</pattern>
+                        
+                        <!-- Mozilla Firefox Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Mozilla\Firefox\Profiles\*\cache2\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Mozilla\Firefox\Profiles\*\startupCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Mozilla\Firefox\Profiles\*\shader-cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Mozilla\Firefox\Profiles\*\thumbnails\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Mozilla\Firefox\Profiles\*\OfflineCache\* [*]</pattern>
+                        
+                        <!-- Opera Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Opera Software\Opera Stable\*\Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Opera Software\Opera Stable\*\Code Cache\* [*]</pattern>
+                        
+                        <!-- Brave Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\BraveSoftware\Brave-Browser\User Data\*\Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\BraveSoftware\Brave-Browser\User Data\*\Code Cache\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+
+                <!-- ================================================ -->
+                <!-- Кэш приложений                                   -->
+                <!-- ================================================ -->
+                <unconditionalExclude>
+                    <objectSet>
+                        <!-- Spotify -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Spotify\Storage\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Spotify\Data\* [*]</pattern>
+                        
+                        <!-- Discord -->
+                        <pattern type="File">%CSIDL_APPDATA%\discord\Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\discord\Code Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\discord\GPUCache\* [*]</pattern>
+                        
+                        <!-- Telegram -->
+                        <pattern type="File">%CSIDL_APPDATA%\Telegram Desktop\tdata\user_data\cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Telegram Desktop\tdata\emoji\* [*]</pattern>
+                        
+                        <!-- Microsoft Teams -->
+                        <pattern type="File">%CSIDL_APPDATA%\Microsoft\Teams\Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Microsoft\Teams\Code Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Microsoft\Teams\GPUCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Microsoft\Teams\Service Worker\CacheStorage\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Teams\* [*]</pattern>
+                        
+                        <!-- Slack -->
+                        <pattern type="File">%CSIDL_APPDATA%\Slack\Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Slack\Code Cache\* [*]</pattern>
+                        
+                        <!-- VS Code -->
+                        <pattern type="File">%CSIDL_APPDATA%\Code\Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Code\CachedData\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Code\CachedExtensions\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Code\CachedExtensionVSIXs\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Code\Code Cache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Code\GPUCache\* [*]</pattern>
+                        
+                        <!-- JetBrains IDEs -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\JetBrains\*\caches\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\JetBrains\*\index\* [*]</pattern>
+                        
+                        <!-- npm cache -->
+                        <pattern type="File">%CSIDL_APPDATA%\npm-cache\* [*]</pattern>
+                        
+                        <!-- pip cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\pip\Cache\* [*]</pattern>
+                        
+                        <!-- NuGet cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\NuGet\Cache\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+
+                <!-- ================================================ -->
+                <!-- Системные файлы и мусор                          -->
+                <!-- ================================================ -->
+                <unconditionalExclude>
+                    <objectSet>
+                        <!-- Thumbs.db и desktop.ini -->
+                        <pattern type="File">* [Thumbs.db]</pattern>
+                        <pattern type="File">* [desktop.ini]</pattern>
+                        
+                        <!-- Временные файлы по расширениям -->
+                        <pattern type="File">* [*.tmp]</pattern>
+                        <pattern type="File">* [*.temp]</pattern>
+                        <pattern type="File">* [*.dmp]</pattern>
+                        <pattern type="File">* [~$*]</pattern>
+                        
+                        <!-- Файлы блокировки -->
+                        <pattern type="File">* [*.lock]</pattern>
+                        <pattern type="File">* [lockfile]</pattern>
+                        
+                        <!-- Windows Search Index -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\WebCache\* [*]</pattern>
+                        
+                        <!-- Font Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\FontCache\* [*]</pattern>
+                        
+                        <!-- D3D Shader Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\D3DSCache\* [*]</pattern>
+                        
+                        <!-- Package Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Packages\*\AC\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Packages\*\LocalCache\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Packages\*\TempState\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+
+                <!-- ================================================ -->
+                <!-- Outlook кэш (но НЕ PST/OST файлы данных)         -->
+                <!-- ================================================ -->
+                <unconditionalExclude>
+                    <objectSet>
+                        <!-- Outlook Cache -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Outlook\RoamCache\* [*]</pattern>
+                        
+                        <!-- Outlook Temp attachments -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\INetCache\Content.Outlook\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Windows\Temporary Internet Files\Content.Outlook\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+
+                <!-- ================================================ -->
+                <!-- OneDrive кэш (но НЕ локальные файлы)             -->
+                <!-- ================================================ -->
+                <unconditionalExclude>
+                    <objectSet>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\OneDrive\logs\* [*]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\OneDrive\*\logs\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Исключение системных папок на уровне системы      -->
+    <!-- ============================================================ -->
+    <component type="Documents" context="System">
+        <displayName>Exclude System Temp and Cache</displayName>
+        <role role="Data">
+            <rules>
+                <unconditionalExclude>
+                    <objectSet>
+                        <!-- Recycle Bin -->
+                        <pattern type="File">C:\$Recycle.Bin\* [*]</pattern>
+                        
+                        <!-- System Volume Information -->
+                        <pattern type="File">C:\System Volume Information\* [*]</pattern>
+                        
+                        <!-- Windows Temp -->
+                        <pattern type="File">%CSIDL_WINDOWS%\Temp\* [*]</pattern>
+                        
+                        <!-- Prefetch -->
+                        <pattern type="File">%CSIDL_WINDOWS%\Prefetch\* [*]</pattern>
+                        
+                        <!-- SoftwareDistribution Download cache -->
+                        <pattern type="File">%CSIDL_WINDOWS%\SoftwareDistribution\Download\* [*]</pattern>
+                        
+                        <!-- Windows.old -->
+                        <pattern type="File">C:\Windows.old\* [*]</pattern>
+                        
+                        <!-- Program Files (мы мигрируем только настройки, не программы) -->
+                        <pattern type="File">C:\Program Files\* [*]</pattern>
+                        <pattern type="File">C:\Program Files (x86)\* [*]</pattern>
+                        
+                        <!-- ProgramData (настройки приложений) - обычно не нужно -->
+                        <pattern type="File">C:\ProgramData\* [*]</pattern>
+                    </objectSet>
+                </unconditionalExclude>
+            </rules>
+        </role>
+    </component>
+
+</migration>
