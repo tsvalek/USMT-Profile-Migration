@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    USMT Custom Migration Configuration
+    Миграция дополнительных компонентов профиля:
+    - Подключенные сетевые диски (Mapped Network Drives)
+    - Подключенные сетевые принтеры (Network Printers)
+    - Закладки и история браузеров (Chrome, Edge, Firefox, Opera, Brave)
+    
+    ВНИМАНИЕ:
+    - Пароли сетевых дисков НЕ мигрируются (ограничение Windows)
+    - Локальные принтеры НЕ мигрируются (только сетевые)
+    - Пароли браузеров НЕ мигрируются (ограничение безопасности)
+-->
+<migration urlid="http://www.microsoft.com/migration/1.0/migxmlext/customdata">
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Сетевые диски (Network Mapped Drives)             -->
+    <!-- ============================================================ -->
+    <component type="System" context="User">
+        <displayName>Network Mapped Drives</displayName>
+        <role role="Settings">
+            <rules>
+                <include>
+                    <objectSet>
+                        <!-- Подключенные сетевые диски хранятся в реестре пользователя -->
+                        <!-- Network - базовые подключения -->
+                        <pattern type="Registry">HKCU\Network\* [*]</pattern>
+                        
+                        <!-- Map Network Drive MRU (история) -->
+                        <pattern type="Registry">HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Map Network Drive MRU\* [*]</pattern>
+                        
+                        <!-- MountPoints2 - точки монтирования -->
+                        <pattern type="Registry">HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2\* [*]</pattern>
+                    </objectSet>
+                </include>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Сетевые принтеры (Network Printers)               -->
+    <!-- ============================================================ -->
+    <component type="System" context="User">
+        <displayName>Network Printers</displayName>
+        <role role="Settings">
+            <rules>
+                <include>
+                    <objectSet>
+                        <!-- Подключения к сетевым принтерам -->
+                        <pattern type="Registry">HKCU\Printers\Connections\* [*]</pattern>
+                        
+                        <!-- Настройки принтеров пользователя -->
+                        <pattern type="Registry">HKCU\Software\Microsoft\Windows NT\CurrentVersion\PrinterPorts\* [*]</pattern>
+                        <pattern type="Registry">HKCU\Software\Microsoft\Windows NT\CurrentVersion\Devices\* [*]</pattern>
+                        
+                        <!-- Принтер по умолчанию -->
+                        <pattern type="Registry">HKCU\Software\Microsoft\Windows NT\CurrentVersion\Windows [Device]</pattern>
+                    </objectSet>
+                </include>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Google Chrome - закладки и история                -->
+    <!-- ============================================================ -->
+    <component type="Application" context="User">
+        <displayName>Google Chrome Bookmarks and History</displayName>
+        <role role="Data">
+            <rules>
+                <include>
+                    <objectSet>
+                        <!-- Закладки -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [Bookmarks]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [Bookmarks.bak]</pattern>
+                        
+                        <!-- История -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [History]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [History-journal]</pattern>
+                        
+                        <!-- История загрузок -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [History Provider Cache]</pattern>
+                        
+                        <!-- Настройки профилей (Local State содержит список профилей) -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data [Local State]</pattern>
+                        
+                        <!-- Preferences (настройки профиля, включая стартовую страницу и т.д.) -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [Preferences]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Google\Chrome\User Data\* [Secure Preferences]</pattern>
+                    </objectSet>
+                </include>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Microsoft Edge (Chromium) - закладки и история    -->
+    <!-- ============================================================ -->
+    <component type="Application" context="User">
+        <displayName>Microsoft Edge Bookmarks and History</displayName>
+        <role role="Data">
+            <rules>
+                <include>
+                    <objectSet>
+                        <!-- Закладки -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\* [Bookmarks]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\* [Bookmarks.bak]</pattern>
+                        
+                        <!-- История -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\* [History]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\* [History-journal]</pattern>
+                        
+                        <!-- Настройки -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data [Local State]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\* [Preferences]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Microsoft\Edge\User Data\* [Secure Preferences]</pattern>
+                    </objectSet>
+                </include>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Mozilla Firefox - закладки и история              -->
+    <!-- ============================================================ -->
+    <component type="Application" context="User">
+        <displayName>Mozilla Firefox Bookmarks and History</displayName>
+        <role role="Data">
+            <rules>
+                <include>
+                    <objectSet>
+                        <!-- Firefox хранит данные в AppData\Roaming -->
+                        
+                        <!-- Закладки (хранятся в places.sqlite) -->
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\* [places.sqlite]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\* [places.sqlite-wal]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\* [places.sqlite-shm]</pattern>
+                        
+                        <!-- Резервные копии закладок -->
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\*\bookmarkbackups\* [*]</pattern>
+                        
+                        <!-- Favicons (иконки закладок) -->
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\* [favicons.sqlite]</pattern>
+                        
+                        <!-- Настройки профиля -->
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\* [prefs.js]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\* [user.js]</pattern>
+                        
+                        <!-- Профили Firefox -->
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox [profiles.ini]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox [installs.ini]</pattern>
+                        
+                        <!-- Дополнительные данные -->
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\* [search.json.mozlz4]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Mozilla\Firefox\Profiles\* [formhistory.sqlite]</pattern>
+                    </objectSet>
+                </include>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Opera - закладки и история                        -->
+    <!-- ============================================================ -->
+    <component type="Application" context="User">
+        <displayName>Opera Bookmarks and History</displayName>
+        <role role="Data">
+            <rules>
+                <include>
+                    <objectSet>
+                        <!-- Закладки -->
+                        <pattern type="File">%CSIDL_APPDATA%\Opera Software\Opera Stable [Bookmarks]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Opera Software\Opera Stable [Bookmarks.bak]</pattern>
+                        
+                        <!-- История -->
+                        <pattern type="File">%CSIDL_APPDATA%\Opera Software\Opera Stable [History]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Opera Software\Opera Stable [History-journal]</pattern>
+                        
+                        <!-- Настройки -->
+                        <pattern type="File">%CSIDL_APPDATA%\Opera Software\Opera Stable [Preferences]</pattern>
+                        <pattern type="File">%CSIDL_APPDATA%\Opera Software\Opera Stable [Secure Preferences]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\Opera Software\Opera Stable [Local State]</pattern>
+                    </objectSet>
+                </include>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Brave Browser - закладки и история                -->
+    <!-- ============================================================ -->
+    <component type="Application" context="User">
+        <displayName>Brave Browser Bookmarks and History</displayName>
+        <role role="Data">
+            <rules>
+                <include>
+                    <objectSet>
+                        <!-- Закладки -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\BraveSoftware\Brave-Browser\User Data\* [Bookmarks]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\BraveSoftware\Brave-Browser\User Data\* [Bookmarks.bak]</pattern>
+                        
+                        <!-- История -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\BraveSoftware\Brave-Browser\User Data\* [History]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\BraveSoftware\Brave-Browser\User Data\* [History-journal]</pattern>
+                        
+                        <!-- Настройки -->
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\BraveSoftware\Brave-Browser\User Data [Local State]</pattern>
+                        <pattern type="File">%CSIDL_LOCAL_APPDATA%\BraveSoftware\Brave-Browser\User Data\* [Preferences]</pattern>
+                    </objectSet>
+                </include>
+            </rules>
+        </role>
+    </component>
+
+    <!-- ============================================================ -->
+    <!-- Компонент: Internet Explorer - избранное и история           -->
+    <!-- (на случай если еще используется)                            -->
+    <!-- ============================================================ -->
+    <component type="Application" context="User">
+        <displayName>Internet Explorer Favorites and History</displayName>
+        <role role="Data">
+            <rules>
+                <include>
+                    <objectSet>
+                        <!-- Избранное (Favorites) -->
+                        <pattern type="File">%CSIDL_FAVORITES%\* [*]</pattern>
+                        
+                        <!-- Typed URLs (история адресной строки) -->
+                        <pattern type="Registry">HKCU\Software\Microsoft\Internet Explorer\TypedURLs\* [*]</pattern>
+                        
+                        <!-- Настройки IE -->
+                        <pattern type="Registry">HKCU\Software\Microsoft\Internet Explorer\Main [Start Page]</pattern>
+                    </objectSet>
+                </include>
+            </rules>
+        </role>
+    </component>
+
+</migration>

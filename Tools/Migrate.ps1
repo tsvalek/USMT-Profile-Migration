@@ -27,6 +27,7 @@ $script:ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $script:USMTNetworkPath = Join-Path $ScriptDir "USMT\amd64"
 $script:ConfigPath = Join-Path $ScriptDir "Config"
 $script:MigExcludeXml = Join-Path $ConfigPath "MigExclude.xml"
+$script:MigCustomXml = Join-Path $ConfigPath "MigCustom.xml"
 
 # Lokalnaya papka dlya USMT (USMT ne rabotaet s setevyh putey)
 $script:USMTLocalPath = "$env:TEMP\USMT_Migration"
@@ -116,8 +117,9 @@ function Copy-USMTLocally {
     if (Test-Path $localScanstate) {
         Write-Status "USMT already cached locally" -Type Success
         $script:USMTCopiedLocally = $true
-        # Vazno: obnovlyaem put k MigExclude dazhe esli uzhe skopirovano
+        # Vazno: obnovlyaem put k MigExclude i MigCustom dazhe esli uzhe skopirovano
         $script:MigExcludeXml = Join-Path $localConfigPath "MigExclude.xml"
+        $script:MigCustomXml = Join-Path $localConfigPath "MigCustom.xml"
         return $true
     }
     
@@ -139,8 +141,9 @@ function Copy-USMTLocally {
         }
         Copy-Item -Path "$ConfigPath\*" -Destination $localConfigPath -Recurse -Force
         
-        # Obnovlyaem put k MigExclude
+        # Obnovlyaem put k MigExclude i MigCustom
         $script:MigExcludeXml = Join-Path $localConfigPath "MigExclude.xml"
+        $script:MigCustomXml = Join-Path $localConfigPath "MigCustom.xml"
         
         $script:USMTCopiedLocally = $true
         Write-Status "USMT copied to: $USMTLocalPath" -Type Success
@@ -470,6 +473,7 @@ function Start-ProfileExport {
         "/i:`"$migapp`""
         "/i:`"$miguser`""
         "/i:`"$MigExcludeXml`""
+        "/i:`"$MigCustomXml`""
         "/ue:*\*"
         "/ui:$userInclude"
         "/l:`"$scanstateLog`""
@@ -493,7 +497,7 @@ function Start-ProfileExport {
         $batchContent = @"
 @echo off
 cd /d "$USMTPath"
-scanstate.exe "$usmtExportPath" /i:"$migapp" /i:"$miguser" /i:"$MigExcludeXml" /ue:*\* /ui:$userInclude /l:"$scanstateLog" /progress:"$progressLog" /c /o /vsc
+scanstate.exe "$usmtExportPath" /i:"$migapp" /i:"$miguser" /i:"$MigExcludeXml" /i:"$MigCustomXml" /ue:*\* /ui:$userInclude /l:"$scanstateLog" /progress:"$progressLog" /c /o /vsc
 exit /b %ERRORLEVEL%
 "@
         
@@ -685,6 +689,7 @@ function Start-ProfileImport {
         "`"$usmtImportPath`""
         "/i:`"$migapp`""
         "/i:`"$miguser`""
+        "/i:`"$MigCustomXml`""
         "/l:`"$loadstateLog`""
         "/progress:`"$progressLog`""
         "/c"
@@ -704,7 +709,7 @@ function Start-ProfileImport {
         $batchContent = @"
 @echo off
 cd /d "$USMTPath"
-loadstate.exe "$usmtImportPath" /i:"$migapp" /i:"$miguser" /l:"$loadstateLog" /progress:"$progressLog" /c
+loadstate.exe "$usmtImportPath" /i:"$migapp" /i:"$miguser" /i:"$MigCustomXml" /l:"$loadstateLog" /progress:"$progressLog" /c
 exit /b %ERRORLEVEL%
 "@
         
